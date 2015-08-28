@@ -3,9 +3,7 @@
 # file: humble_rpi-plugin-mtp.rb
 
 
-require 'requestor'
-eval Requestor.read('http://rorbuilder.info/r/ruby'){|x| x.require 'serialport_mtp'}
-#require 'serialport_mtp'
+require 'serialport_mtp'
 
 
 class HumbleRPiPluginMTP < SerialPortMTP

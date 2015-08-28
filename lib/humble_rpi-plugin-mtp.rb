@@ -17,11 +17,22 @@ class HumbleRPiPluginMTP < SerialPortMTP
 
   end
 
-  def on_printer_message(message)  
+  def on_printer_message(message)
+    
+    self.wake
+    
     self.println(Time.now.to_s + "\n" + message)
     self.feed 4
+    
+    self.sleep_after 10 # seconds
   end
   
+  def start()
+    
+    super
+    self.sleep_after 1 # second
+    
+  end
   alias on_start start  
   
 end
