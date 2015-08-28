@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = 'humble_rpi-plugin-mtp'
-  s.version = '0.1.1'
+  s.version = '0.1.2'
   s.summary = 'This Humble RPi plugin controls the mini thermal printer.'
   s.authors = ['James Robertson']
   s.files = Dir['lib/humble_rpi-plugin-mtp.rb']
