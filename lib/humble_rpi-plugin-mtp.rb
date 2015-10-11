@@ -20,6 +20,9 @@ class HumbleRPiPluginMTP < SerialPortMTP
 
   def on_printer_message(raw_message)
 
+    message = raw_message[/^https?:\/\//] ? fetch(raw_message) : raw_message
+    return if message.strip.empty?
+    
     wake
 
     inverse_on
@@ -30,7 +33,6 @@ class HumbleRPiPluginMTP < SerialPortMTP
     
     feed
 
-    message = raw_message[/^https?:\/\//] ? fetch(raw_message) : raw_message
     message.lines {|x| self.print x}
     feed 4
     
