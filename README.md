@@ -1,3 +1,20 @@
+# Printing bold text HTML tags in the HumbleRPi-plugin-mtp gem
+
+    require 'humble_rpi-plugin-mtp'
+
+    mtp = HumbleRPiPluginMTP.new
+    mtp.start
+    mtp.on_printer_message '<p>this is a test of the <b>bold</b> text</p>'
+
+
+
+Notes: 
+
+* The impact of the bold text is relatively light compared to what you may be used to.
+* The message must start with opening angle bracket to enable the printing of an HTML string, otherwise regular text is printed.
+
+----------------------------------------------------------
+
 # Introducing the Humble RPi Plugin Mini Thermal Printer gem
 
     require 'humble_rpi-plugin-mtp'
