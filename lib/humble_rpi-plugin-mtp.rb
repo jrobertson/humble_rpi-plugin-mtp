@@ -3,8 +3,22 @@
 # file: humble_rpi-plugin-mtp.rb
 
 require 'open-uri'
+require 'dom_render'
 require 'serialport_mtp'
 
+
+
+class Html < DomRender
+
+  def p(x)
+    render_all x
+  end
+
+  def b(x)
+    [:bold_on, render_all(x), :bold_off]
+  end
+
+end
 
 class HumbleRPiPluginMTP < SerialPortMTP
 
@@ -33,7 +47,11 @@ class HumbleRPiPluginMTP < SerialPortMTP
     
     feed
 
-    message.lines {|x| self.print x}
+    if message =~ /^</ then
+      scanprint Html.new(message).to_a
+    else
+      message.lines {|x| self.print x}
+    end
     feed 4
     
     sleep_after 10 # seconds
@@ -55,5 +73,22 @@ class HumbleRPiPluginMTP < SerialPortMTP
     open(url, http_basic_authentication: [@username, @password]).read
     
   end
+  
+  def scanprint(a2)
+
+    a2.each do |x|
+      
+      if x.is_a? String then
+        print x
+      elsif x.is_a? Array
+        scanprint x
+      else
+        method(x).call
+      end
+      
+    end
+
+  end
+  
   
 end
