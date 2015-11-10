@@ -17,6 +17,8 @@ class Html < DomRender
   def b(x)
     [:bold_on, render_all(x), :bold_off]
   end
+  
+  alias strong b
 
 end
 
@@ -50,7 +52,7 @@ class HumbleRPiPluginMTP < SerialPortMTP
     if message =~ /^</ then
       scanprint Html.new(message).to_a
     else
-      message.lines {|x| self.print x}
+      wordwrap(message).lines {|x| self.print x}
     end
     feed 4
     
@@ -79,7 +81,7 @@ class HumbleRPiPluginMTP < SerialPortMTP
     a2.each do |x|
       
       if x.is_a? String then
-        print x
+        self.print wordwrap(x).lines
       elsif x.is_a? Array
         scanprint x
       else
@@ -89,6 +91,30 @@ class HumbleRPiPluginMTP < SerialPortMTP
     end
 
   end
+  
+  def wordwrap(s, cols=32)
+
+    a = s.split(/ /)
+
+    a2 = a.inject(['']) do |r,word|
+
+      word.lines.each do |x|
+
+        if (r[-1] + x).length <= cols then
+          r[-1] << (r[-1].empty? ? x : ' ' + x)
+        else
+          r +=  [x]
+        end
+        r[-1] = r[-1].chomp ; r += [''] if x[-1] == "\n"
+
+      end
+      r
+    end
+
+    a2.join("\n")
+
+  end
+  
   
   
 end
