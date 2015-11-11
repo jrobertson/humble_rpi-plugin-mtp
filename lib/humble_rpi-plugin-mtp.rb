@@ -19,6 +19,18 @@ class Html < DomRender
   end
   
   alias strong b
+  
+  def br(x)
+    :feed
+  end  
+  
+  def strike(x)
+    [:strike_on, render_all(x), :strike_off]
+  end  
+  
+  def u(x)
+    [:underline_on, render_all(x), :underline_off]
+  end
 
 end
 
@@ -98,9 +110,9 @@ class HumbleRPiPluginMTP < SerialPortMTP
 
     a2 = a.inject(['']) do |r,word|
 
-      word.lines.each do |x|
+      word.lines.each.with_index do |x,i|
 
-        if (r[-1] + x).length <= cols then
+        if ((r[-1] + x).length < cols) or x[/[=]/] then
           r[-1] << (r[-1].empty? ? x : ' ' + x)
         else
           r +=  [x]
