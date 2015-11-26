@@ -10,25 +10,25 @@ require 'serialport_mtp'
 
 class Html < DomRender
 
-  def p(x)
+  def p(x, attributes, style)
     render_all x
   end
 
-  def b(x)
+  def b(x, attributes, style)
     [:bold_on, render_all(x), :bold_off]
   end
   
   alias strong b
   
-  def br(x)
+  def br(x, attributes, style)
     :feed
   end  
   
-  def strike(x)
+  def strike(x, attributes, style)
     [:strike_on, render_all(x), :strike_off]
   end  
   
-  def u(x)
+  def u(x, attributes, style)
     [:underline_on, render_all(x), :underline_off]
   end
 
@@ -65,8 +65,9 @@ class HumbleRPiPluginMTP < SerialPortMTP
       scanprint Html.new(message).to_a
     else
       wordwrap(message).lines {|x| self.print x}
+      feed 5 if message.length < 140
     end
-    feed 4
+    feed 5
     
     sleep_after 10 # seconds
   end
@@ -93,7 +94,7 @@ class HumbleRPiPluginMTP < SerialPortMTP
     a2.each do |x|
       
       if x.is_a? String then
-        self.print wordwrap(x).lines
+        self.print (x).lines.join
       elsif x.is_a? Array
         scanprint x
       else
